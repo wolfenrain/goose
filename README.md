@@ -102,7 +102,7 @@ void main() {
 }
 ```
 
-The same can be done with the `down`, keep in mind that the migration you specific wont be migrated down.
+The same can be done with the `down`, but keep in mind that the migration you specify won't be migrated down.
 
 If you want to check if there is something to go up or down to you can use the `canUp` and `canDown` methods:
 
