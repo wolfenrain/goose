@@ -1,0 +1,12 @@
+name: goose
+description: Just as geese migrate, you too can migrate your code with the help of Goose.
+version: 0.1.0
+repository: https://github.com/wolfenrain/goose
+issue_tracker: https://github.com/wolfenrain/goose/issues
+
+environment:
+  sdk: ">=2.19.0 <3.0.0"
+
+dev_dependencies:
+  test: ^1.19.2
+  very_good_analysis: ^4.0.0
