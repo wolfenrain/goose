@@ -51,9 +51,6 @@ commits=$(echo "$markdown_commits" | sed -En "s/^/- /p")
 echo "Updating version to $new_version"
 sed -i '' "s/version: $package_version/version: $new_version/g" pubspec.yaml
 
-# Update dart file with new version.
-dart run build_runner build --delete-conflicting-outputs > /dev/null
-
 if grep -q $new_version "CHANGELOG.md"; then
     echo "CHANGELOG already contains version $new_version."
     exit 1
