@@ -29,4 +29,5 @@ pubspec.lock
 # Test related
 coverage
 
-example/state.txt
+# Example related
+state.txt
