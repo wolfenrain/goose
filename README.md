@@ -16,7 +16,7 @@ Just as geese migrate, you too can migrate your code with the help of Goose.
 
 Goose is a minimalistic migration framework that has no opinions on how you should migrate, it only provides a structure to do so.
 
-You can use Goose wherever you want, with whatever you want. May that be [Flutter](https://flutter.dev) with [Isar](https://isar.dev) or [Dart Frog](https://dartfrog.vgv.dev) with [Hive](https://pub.dev/packages/hive) or X with Y, this silly goose can do it all!
+You can use Goose wherever you want, with whatever you want. Whether that's [Flutter](https://flutter.dev) with [Isar](https://isar.dev) or [Dart Frog](https://dartfrog.vgv.dev) with [Hive](https://pub.dev/packages/hive) or X with Y, this silly goose can do it all!
 
 ## Features
 
@@ -84,7 +84,7 @@ void main() async {
 
 ### Migrating up and down to a certain migration
 
-In the above example we called `goose.up` to migrate all the way up but you can also pass a migration id to migrate up that given migration:
+In the above example we called `goose.up` to migrate all the way up but you can also pass a `migration id` to migrate up that given migration:
 
 ```dart
 void main() {
