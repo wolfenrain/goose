@@ -61,13 +61,10 @@ echo "# ${new_version}\n\n${commits}\n\n$(cat CHANGELOG.md)" > CHANGELOG.md
 echo "CHANGELOG for $package_name generated, validate entries here: $(pwd)/CHANGELOG.md"
 
 echo "Creating git branch for $package_name@$new_version"
-git checkout -b "chore/$new_version" > /dev/null
+git checkout -b "chore($package_name)/$new_version" > /dev/null
 
-git add pubspec.yaml CHANGELOG.md 
-if [ -f lib/version.dart ]; then
-  git add lib/version.dart
-fi
+git add pubspec.yaml CHANGELOG.md
 
 echo ""
 echo "Run the following command if you wish to commit the changes:"
-echo "git commit -m \"chore: $new_version\""
+echo "git commit -m \"chore($package_name): $new_version\""

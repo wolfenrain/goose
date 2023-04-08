@@ -3,11 +3,48 @@ name: publish
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - '*-v*.*.*'
 
 jobs:
-  publish:
+  to_publish:
     runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: read
+
+    outputs:
+      package: ${{ steps.package.outputs.package }}
+
+    steps:
+      - name: 📚 Git Checkout
+        uses: actions/checkout@v3
+
+      - name: 📦 Finding a package to publish
+        id: package
+        run: |
+          tag=${GITHUB_REF#refs/*/}
+          package=$(echo $tag | sed -En "s/^(.*)-v(.*)/\1/p")
+          if [[ -d "packages/$package" ]]; then
+            echo "::set-output name=package::${package}"
+          fi
+
+  failed_to_find:
+    needs: to_publish
+    if: needs.to_publish.outputs.package == ''
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 😢 No package found to publish
+        run: exit 1
+
+  publish:
+    needs: to_publish
+    if: needs.to_publish.outputs.package != ''
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: packages/${{ needs.to_publish.outputs.package }}
 
     steps:
       - name: 📚 Git Checkout

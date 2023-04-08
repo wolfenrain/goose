@@ -1,4 +1,4 @@
-/// A Very Good Project created by Very Good CLI.
+/// Just as geese migrate, you too can migrate your code with the help of Goose.
 library goose;
 
 export 'src/goose.dart';

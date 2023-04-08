@@ -18,8 +18,7 @@
 # VSCode related
 .vscode/
 
-# Dart/Pub related
-**/doc/api/
+# Dart related
 .dart_tool/
 .packages
 .pub-cache/
@@ -30,8 +29,5 @@ pubspec.lock
 # Test related
 coverage
 
-!.vscode/launch.json
-!.idea/runConfigurations/
-
-# Ingore generated test runner
-.test_runner.dart
+# Example related
+state.txt
