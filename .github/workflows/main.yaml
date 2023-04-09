@@ -36,6 +36,9 @@ jobs:
       packages: ${{ steps.packages.outputs.changes }}
 
     steps:
+      - name: 📚 Git Checkout
+        uses: actions/checkout@v3
+
       - uses: dorny/paths-filter@v2
         id: packages
         with:
