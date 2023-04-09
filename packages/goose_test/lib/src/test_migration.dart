@@ -4,7 +4,6 @@ import 'package:goose/goose.dart';
 import 'package:meta/meta.dart';
 import 'package:test/test.dart';
 
-///
 /// [testMigration] creates a new `migration`-specific test case with the given
 /// [description].
 ///
