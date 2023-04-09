@@ -29,37 +29,41 @@ import 'package:goose_test/goose_test.dart';
 | Parameter | Description |
 | --------- | ----------- |
 | `create`  | Should create and return the `migration` that is to be tested. |
-| `setupUp` | An optional callback which is invoked before the `migration`'s `up` is called and can be used for setting up the migration's required data for the `down` migration. For common set up code, prefer to use `setUp` from `package:test/test.dart`. |
+| `setupUp` | An optional callback which is invoked before the `migration`'s `up` is called and can be used for setting up the migration's required data for the `up` migration. For common set up code, prefer to use `setUp` from `package:test/test.dart`. |
 | `verifyUp` | An optional callback which is invoked after the `migration`'s `up` was called and can be used for additional verification/assertions. `verifyUp` is called with the `migration` returned by `create`. |
 | `setupDown` | An optional callback which is invoked before the `migration`'s `down` is called and can be used for setting up the migration's required data for the `down` migration. For common set up code, prefer to use `setUp` from `package:test/test.dart`. |
 | `verifyDown` | An optional callback which is invoked after the `migration`'s `down` was called and can be used for additional verification/assertions. `verifyDown` is called with the `migration` returned by `create`. |
 | `tags` | An optional argument and if it is passed, it declares user-defined tags that are applied to the test. These tags can be used to select or skip the test on the command line, or to do bulk test configuration. |
 
 ```dart
+import 'package:goose/goose.dart';
 import 'package:goose_test/goose_test.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-class _MockStorage extends Mock implements Storage {}
+class MyMigration extends Migration {
+  MyMigration(this.storage)
+      : super('my_migration', description: 'A simple migration');
+
+  final Map<String, dynamic> storage;
+
+  @override
+  Future<void> down() async => storage.clear();
+
+  @override
+  Future<void> up() async => storage['migrated'] = true;
+}
 
 void main() {
   group('MyMigration', () {
-    late Storage storage;
-
-    setUp(() {
-      storage = _MockStorage();
-      when(() => storage.clear()).thenAnswer((_) async {});
-      when(() => storage.put(any(), any())).thenAnswer((_) async {});
-    });
+    late Map<String, dynamic> storage;
+    setUp(() => storage = {});
 
     testMigration(
       'executes correctly',
       create: () => MyMigration(storage),
-      verifyUp: (_) {
-        verify(() => storage.clear()).called(equals(1));
-        verifyNever(() => storage.put(any(), any()));
-      },
-      verifyDown: (_) => verify(() => storage.clear()).called(equals(1)),
+      verifyUp: (_) => expect(storage['migrated'], isTrue),
+      verifyDown: (_) => expect(storage.isEmpty, isTrue),
     );
   });
 }
+```

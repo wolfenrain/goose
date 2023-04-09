@@ -1,46 +1,30 @@
-import 'dart:io';
-
 import 'package:goose/goose.dart';
+import 'package:goose_test/goose_test.dart';
+import 'package:test/test.dart';
 
-import 'migrations/migrations.dart';
+class MyMigration extends Migration {
+  MyMigration(this.storage)
+      : super('my_migration', description: 'A simple migration');
 
-final state = File('state.txt')..createSync();
+  final Map<String, dynamic> storage;
 
-void main(List<String> args) async {
-  final goose = Goose(
-    store: (index) => state.writeAsString('$index'),
-    retrieve: () => state.readAsString().then(int.tryParse),
-    migrations: [
-      InitialMigration(),
-      FixingMigration(),
-      AnotherMigration(),
-    ],
-  );
+  @override
+  Future<void> down() async => storage.clear();
 
-  stdout.writeln('''
-Can go up: ${await goose.canUp() ? '✅' : '❌'}
-Can go down: ${await goose.canDown() ? '✅' : '❌'}''');
-
-  if (args.isEmpty) return visualize(await goose.getMigrationState());
-  stdout.writeln('\x1b7');
-  goose.migrations.listen(visualize);
-
-  if (args.first == 'down') {
-    return goose.down(to: args.length > 1 ? args[1] : null);
-  } else if (args.first == 'up') {
-    return goose.up(to: args.length > 1 ? args[1] : null);
-  }
-  throw UnsupportedError('Unknown command: ${args.first}');
+  @override
+  Future<void> up() async => storage['migrated'] = true;
 }
 
-void visualize(List<MigrationState> migrations) {
-  // clear the terminal
-  stdout.write('\x1b8\x1b[0J');
-  for (final migration in migrations) {
-    if (migration.isMigrated) {
-      stdout.writeln('🟩 (${migration.name}) ${migration.description}');
-    } else {
-      stdout.writeln('⬜️ (${migration.name}) ${migration.description}');
-    }
-  }
+void main() {
+  group('MyMigration', () {
+    late Map<String, dynamic> storage;
+    setUp(() => storage = {});
+
+    testMigration(
+      'executes correctly',
+      create: () => MyMigration(storage),
+      verifyUp: (_) => expect(storage['migrated'], isTrue),
+      verifyDown: (_) => expect(storage.isEmpty, isTrue),
+    );
+  });
 }

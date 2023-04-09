@@ -4,6 +4,41 @@ import 'package:goose/goose.dart';
 import 'package:meta/meta.dart';
 import 'package:test/test.dart';
 
+///
+/// [testMigration] creates a new `migration`-specific test case with the given
+/// [description].
+///
+/// [testMigration] will handle running the migration's up and
+/// down methods.
+///
+/// [testMigration] also ensures that the migration will always
+/// happen in the order of `up` first and then try revert through the `down`
+/// method to ensure that the migration can be reverted.
+///
+/// [create] should create and return the `migration` that is to be tested.
+///
+/// [setupUp] is an optional callback which is invoked before the [Migration.up]
+/// is called and can be used for setting up the migration's required data
+/// for that method. For common set up code, prefer to use [setUp] from
+/// `package:test/test.dart`.
+///
+/// [verifyUp] is an optional callback which is invoked after the [Migration.up]
+/// was called and can be used for additional verification/assertions.
+/// [verifyUp] is called with the `migration` returned by [create].
+///
+/// [setupDown] is an optional callback which is invoked before the
+/// [Migration.down] is called and can be used for setting up the migration's
+/// required data for that method. For common set up code, prefer to use
+/// [setUp] from `package:test/test.dart`.
+///
+/// [verifyDown] is an optional callback which is invoked after the
+/// [Migration.down] was called and can be used for additional
+/// verification/assertions. [verifyDown] is called with the `migration`
+/// returned by [create].
+///
+/// [tags] is an optional argument and if it is passed, it declares user-defined
+/// tags that are applied to the test. These tags can be used to select or skip
+/// the test on the command line, or to do bulk test configuration.
 @isTest
 Future<void> testMigration<T extends Migration>(
   String description, {
