@@ -25,6 +25,7 @@ It comes with the following features:
 | Package                                                                                    | Pub                                                                                                                  |
 | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
 | [goose](https://github.com/wolfenrain/goose/tree/main/packages/goose)                         | [![pub package](https://img.shields.io/pub/v/goose.svg)](https://pub.dev/packages/goose)                               |
+| [goose_test](https://github.com/wolfenrain/goose/tree/main/packages/goose_test)               | [![pub package](https://img.shields.io/pub/v/goose_test.svg)](https://pub.dev/packages/goose_test)                     |
 
 ---
 
