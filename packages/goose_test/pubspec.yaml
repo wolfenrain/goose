@@ -1,0 +1,16 @@
+name: goose_test
+description: A testing library which makes it easy to test migrations. Built to be used with the Goose migration package.
+version: 0.1.0
+repository: https://github.com/wolfenrain/goose/tree/main/packages/goose_test
+issue_tracker: https://github.com/wolfenrain/goose/issues
+
+environment:
+  sdk: ">=2.19.0 <3.0.0"
+
+dependencies:
+  goose: ^0.1.0
+  meta: ^1.9.1
+  test: ^1.19.2
+
+dev_dependencies:
+  very_good_analysis: ^4.0.0

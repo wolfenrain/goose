@@ -43,6 +43,9 @@ jobs:
             goose:
               - ./.github/workflows/main.yaml
               - packages/goose/**
+            goose_test:
+              - ./.github/workflows/main.yaml
+              - packages/goose_test/**
 
   build:
     needs: packages
