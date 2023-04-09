@@ -39,6 +39,39 @@ import 'package:test/test.dart';
 /// [tags] is an optional argument and if it is passed, it declares user-defined
 /// tags that are applied to the test. These tags can be used to select or skip
 /// the test on the command line, or to do bulk test configuration.
+///
+/// ```dart
+/// import 'package:goose/goose.dart';
+/// import 'package:goose_test/goose_test.dart';
+/// import 'package:test/test.dart';
+///
+/// class MyMigration extends Migration {
+///   MyMigration(this.storage)
+///       : super('my_migration', description: 'A simple migration');
+///
+///   final Map<String, dynamic> storage;
+///
+///   @override
+///   Future<void> down() async => storage.clear();
+///
+///   @override
+///   Future<void> up() async => storage['migrated'] = true;
+/// }
+///
+/// void main() {
+///   group('MyMigration', () {
+///     late Map<String, dynamic> storage;
+///     setUp(() => storage = {});
+///
+///     testMigration(
+///       'executes correctly',
+///       create: () => MyMigration(storage),
+///       verifyUp: (_) => expect(storage['migrated'], isTrue),
+///       verifyDown: (_) => expect(storage.isEmpty, isTrue),
+///     );
+///   });
+/// }
+/// ```
 @isTest
 Future<void> testMigration<T extends Migration>(
   String description, {
