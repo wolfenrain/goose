@@ -25,7 +25,34 @@ jobs:
         !.dart_tool/**/*.{dart,yaml}
         .*/**/*.yml
       modified_files_only: false
+  
+  packages:
+    runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: read
+
+    outputs:
+      packages: ${{ steps.packages.outputs.changes }}
+
+    steps:
+      - uses: dorny/paths-filter@v2
+        id: packages
+        with:
+          filters: |
+            goose:
+              - ./.github/workflows/main.yaml
+              - packages/goose/**
 
   build:
+    needs: packages
+    if: ${{ needs.packages.outputs.packages != '[]' }}
+
+    strategy:
+      matrix:
+        package: ${{ fromJSON(needs.packages.outputs.packages) }}
+
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/dart_package.yml@v1
+    with:
+      working_directory: packages/${{ matrix.package }}
 
