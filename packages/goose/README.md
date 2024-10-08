@@ -59,7 +59,7 @@ class MyMigration extends Migration {
 
 void main() async {
   // We are just storing the key in-memory, but normally you would store this in a database for 
-  // persistance.
+  // persistence.
   int? migrationKey;
 
   final goose = Goose(
