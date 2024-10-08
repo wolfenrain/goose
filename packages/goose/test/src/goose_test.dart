@@ -37,7 +37,7 @@ void main() {
               i,
               downCalled: () => downCalled++,
               upCalled: () => upCalled++,
-            )
+            ),
         ],
         store: (index) async => currentIndex = index,
         retrieve: () async => currentIndex,
@@ -120,6 +120,10 @@ void main() {
         expect(upCalled, equals(0));
         expect(downCalled, equals(0));
       });
+
+      test('throws exception with an unknown migration name', () async {
+        await expectLater(goose.up(to: '1337'), throwsException);
+      });
     });
 
     group('down', () {
@@ -166,6 +170,10 @@ void main() {
         expect(currentIndex, equals(2));
         expect(upCalled, equals(0));
         expect(downCalled, equals(0));
+      });
+
+      test('throws exception with an unknown migration name', () async {
+        await expectLater(goose.down(to: '1337'), throwsException);
       });
     });
 
