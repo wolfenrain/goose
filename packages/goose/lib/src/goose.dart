@@ -49,7 +49,8 @@ class Goose {
     final migrations = await _getUpMigrations(to: to);
     for (var i = 0; i < migrations.length; i++) {
       final migration = migrations.elementAt(i);
-      await _goUp(_migrations.indexOf(migration), migration).then(_emitState);
+      await _goUp(_migrations.indexOf(migration) + 1, migration)
+          .then(_emitState);
     }
   }
 
@@ -58,35 +59,48 @@ class Goose {
     final migrations = await _getDownMigrations(to: to);
     for (var i = migrations.length - 1; i >= 0; i--) {
       final migration = migrations.elementAt(i);
-      await _goDown(_migrations.indexOf(migration), migration).then(_emitState);
+      await _goDown(_migrations.indexOf(migration) + 1, migration)
+          .then(_emitState);
     }
   }
 
   Future<List<Migration>> _getUpMigrations({String? to}) async {
-    var upTo = _migrations.indexWhere((e) => e.name == to) + 1;
-    if (upTo <= 0) upTo = _migrations.length;
+    var end = _migrations.length;
+    if (to != null) {
+      end = _migrations.indexWhere((e) => e.name == to) + 1;
+      if (end == 0) {
+        throw Exception('No migration found with name "$to"');
+      }
+    }
+
     final migrationKey = await _retrieve() ?? 0;
-    if (migrationKey > upTo) return [];
-    return _migrations.getRange(migrationKey, upTo).toList();
+    if (migrationKey >= end) return [];
+    return _migrations.getRange(migrationKey, end).toList();
   }
 
   Future<List<Migration>> _getDownMigrations({String? to}) async {
-    var downTo = _migrations.indexWhere((e) => e.name == to) + 1;
-    downTo = downTo <= 0 ? 0 : downTo;
+    var start = 0;
+    if (to != null) {
+      start = _migrations.indexWhere((e) => e.name == to) + 1;
+      if (start == 0) {
+        throw Exception('No migration found with name "$to"');
+      }
+    }
+
     final migrationKey = await _retrieve() ?? 0;
-    if (migrationKey < downTo) return [];
-    return _migrations.getRange(downTo, migrationKey).toList();
+    if (migrationKey < start) return [];
+    return _migrations.getRange(start, migrationKey).toList();
   }
 
-  /// We store the index first because if the migration up fails we are at least
-  /// able to call it's down to fix any potential issues.
-  Future<void> _goUp(int index, Migration migration) =>
-      _store(index + 1).then((_) => migration.up());
+  Future<void> _goUp(int index, Migration migration) async {
+    await migration.up();
+    await _store(index);
+  }
 
-  /// We migrate down first and then store the index to ensure that we don't get
-  /// into a state that wasn't properly reverted.
-  Future<void> _goDown(int index, Migration migration) =>
-      migration.down().then((_) => _store(index));
+  Future<void> _goDown(int index, Migration migration) async {
+    await migration.down();
+    await _store(index - 1);
+  }
 
   Future<void> _emitState(void _) =>
       getMigrationState().then(_streamController.add);

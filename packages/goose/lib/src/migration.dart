@@ -1,5 +1,6 @@
 /// {@template migration}
 /// Base class for migrations.
+/// {@endtemplate}
 abstract class Migration {
   /// {@macro migration}
   const Migration(

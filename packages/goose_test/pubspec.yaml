@@ -5,7 +5,7 @@ repository: https://github.com/wolfenrain/goose/tree/main/packages/goose_test
 issue_tracker: https://github.com/wolfenrain/goose/issues
 
 environment:
-  sdk: ">=2.19.0 <3.0.0"
+  sdk: ">=2.19.0 <4.0.0"
 
 dependencies:
   goose: ^0.1.0
@@ -13,4 +13,4 @@ dependencies:
   test: ^1.19.2
 
 dev_dependencies:
-  very_good_analysis: ^4.0.0
+  very_good_analysis: ^6.0.0
